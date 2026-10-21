@@ -37,9 +37,9 @@ public final class SaberInput {
 	public static final KeyMapping.Category CATEGORY = KeyMapping.Category.register(SwMod.id("lightsaber"));
 
 	public static final KeyMapping TOGGLE = KeyMappingHelper.registerKeyMapping(new KeyMapping(
-			"key.swmod.toggle_saber", InputConstants.Type.KEYSYM, InputConstants.KEY_X, CATEGORY));
+			"key.swmod.toggle_saber", InputConstants.Type.KEYBOARD, InputConstants.KEY_X, CATEGORY));
 	public static final KeyMapping THROW = KeyMappingHelper.registerKeyMapping(new KeyMapping(
-			"key.swmod.throw_saber", InputConstants.Type.KEYSYM, InputConstants.KEY_F, CATEGORY));
+			"key.swmod.throw_saber", InputConstants.Type.KEYBOARD, InputConstants.KEY_F, CATEGORY));
 
 	/** Mausbewegung (in "Grad", wie die Kamera sich drehen würde), ab der ein Schlag ausgelöst wird. */
 	private static final double GESTURE_THRESHOLD = 2.4;
@@ -110,7 +110,7 @@ public final class SaberInput {
 			}
 		}
 
-		if (!pressed || !holdingSaber || minecraft.screen != null || Lightsabers.isThrown(mainHand, player.level())) {
+		if (!pressed || !holdingSaber || minecraft.gui.screen() != null || Lightsabers.isThrown(mainHand, player.level())) {
 			return;
 		}
 
@@ -139,7 +139,7 @@ public final class SaberInput {
 			}
 		}
 
-		if (!pressed || minecraft.screen != null) {
+		if (!pressed || minecraft.gui.screen() != null) {
 			return;
 		}
 
@@ -158,7 +158,7 @@ public final class SaberInput {
 	}
 
 	private static void handleAttack(Minecraft minecraft, LocalPlayer player) {
-		boolean ready = isSaberReady(minecraft) && minecraft.screen == null;
+		boolean ready = isSaberReady(minecraft) && minecraft.gui.screen() == null;
 		boolean down = ready && minecraft.options.keyAttack.isDown();
 
 		// Bewegung zerfällt mit der Zeit: nur zügige Bewegungen zählen als Schlag.
@@ -207,7 +207,7 @@ public final class SaberInput {
 	 */
 	public static double onMouseMove(double dx, double dy) {
 		Minecraft minecraft = Minecraft.getInstance();
-		if (!attackHeld || !isSaberReady(minecraft) || minecraft.screen != null) {
+		if (!attackHeld || !isSaberReady(minecraft) || minecraft.gui.screen() != null) {
 			return 1.0;
 		}
 

@@ -162,7 +162,7 @@ public class ThrownLightsaberEntity extends Projectile {
 			}
 
 			DamageSource source = ModDamageTypes.thrownLightsaber(level, this, owner);
-			target.invulnerableTime = 0;
+			target.setInvulnerableTime(0);
 			if (target.hurtServer(level, source, SaberTuning.THROW_DAMAGE)) {
 				level.playSound(null, target.getX(), target.getY(0.5), target.getZ(), ModSounds.LIGHTSABER_HIT, SoundSource.PLAYERS, 1.0f, 1.0f);
 				level.sendParticles(ParticleTypes.SMOKE, target.getX(), target.getY(0.5), target.getZ(), 6, 0.1, 0.1, 0.1, 0.01);

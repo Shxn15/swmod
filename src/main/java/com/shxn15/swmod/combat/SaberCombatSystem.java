@@ -397,7 +397,7 @@ public final class SaberCombatSystem {
 		}
 
 		ServerLevel level = attacker.level();
-		target.invulnerableTime = 0; // Kombos sollen ohne Unverwundbarkeits-Pause treffen
+		target.setInvulnerableTime(0); // Kombos sollen ohne Unverwundbarkeits-Pause treffen
 		if (target.hurtServer(level, ModDamageTypes.lightsaber(level, attacker), SaberTuning.DAMAGE)) {
 			level.playSound(null, contact.x, contact.y, contact.z, ModSounds.LIGHTSABER_HIT, SoundSource.PLAYERS, 1.0f,
 					0.9f + level.getRandom().nextFloat() * 0.2f);
@@ -438,8 +438,8 @@ public final class SaberCombatSystem {
 
 		defender.level().playSound(null, defender.getX(), defender.getEyeY(), defender.getZ(), ModSounds.LIGHTSABER_GUARD_BREAK,
 				SoundSource.PLAYERS, 1.0f, 1.0f);
-		defender.displayClientMessage(Component.translatable("message.swmod.guard_broken").withStyle(ChatFormatting.RED), true);
-		attacker.displayClientMessage(Component.translatable("message.swmod.guard_broken_other").withStyle(ChatFormatting.GOLD), true);
+		defender.sendOverlayMessage(Component.translatable("message.swmod.guard_broken").withStyle(ChatFormatting.RED));
+		attacker.sendOverlayMessage(Component.translatable("message.swmod.guard_broken_other").withStyle(ChatFormatting.GOLD));
 		push(defender, attacker, 0.45);
 	}
 
@@ -477,8 +477,13 @@ public final class SaberCombatSystem {
 
 	/** Stößt {@code target} von {@code source} weg. */
 	static void push(LivingEntity target, LivingEntity source, double strength) {
-		target.knockback(strength, source.getX() - target.getX(), source.getZ() - target.getZ());
-		target.hurtMarked = true;
+		Vec3 away = new Vec3(target.getX() - source.getX(), 0, target.getZ() - source.getZ());
+		if (away.lengthSqr() < 1.0E-6) {
+			away = source.getLookAngle().multiply(1, 0, 1);
+		}
+		away = away.normalize().scale(strength);
+		target.push(away.x, Math.min(0.25, strength * 0.4), away.z);
+		target.needsSync = true;
 	}
 
 	static void sparks(ServerLevel level, Vec3 point, int count, int colorA, int colorB) {

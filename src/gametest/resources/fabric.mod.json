@@ -1,0 +1,15 @@
+{
+	"schemaVersion": 1,
+	"id": "swmod-test",
+	"version": "1.0.0",
+	"name": "Star Wars Mod Tests",
+	"environment": "*",
+	"entrypoints": {
+		"fabric-client-gametest": [
+			"com.shxn15.swmod.test.LightsaberClientGameTest"
+		]
+	},
+	"depends": {
+		"swmod": "*"
+	}
+}

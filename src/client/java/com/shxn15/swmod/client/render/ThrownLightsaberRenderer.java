@@ -50,21 +50,21 @@ public class ThrownLightsaberRenderer extends EntityRenderer<ThrownLightsaberEnt
 		poseStack.pushPose();
 		poseStack.translate(0f, 0.25f, 0f);
 		// Leicht gekippte Drehebene sieht dynamischer aus als eine perfekt flache Scheibe.
-		poseStack.mulPose(Axis.YP.rotationDegrees(state.heading));
-		poseStack.mulPose(Axis.ZP.rotationDegrees(12f));
+		poseStack.rotateDegrees(Axis.YP, state.heading);
+		poseStack.rotateDegrees(Axis.ZP, 12f);
 
 		// Bewegungsunschärfe: frühere Drehwinkel schwächer nachzeichnen.
 		float[] ghostOffsets = {-14f, -28f, -42f};
 		float[] ghostIntensity = {0.45f, 0.25f, 0.12f};
 		for (int i = 0; i < ghostOffsets.length; i++) {
 			poseStack.pushPose();
-			poseStack.mulPose(Axis.YP.rotationDegrees(state.spin + ghostOffsets[i]));
+			poseStack.rotateDegrees(Axis.YP, state.spin + ghostOffsets[i]);
 			this.submitSaber(state, poseStack, collector, ghostIntensity[i], false);
 			poseStack.popPose();
 		}
 
 		poseStack.pushPose();
-		poseStack.mulPose(Axis.YP.rotationDegrees(state.spin));
+		poseStack.rotateDegrees(Axis.YP, state.spin);
 		this.submitSaber(state, poseStack, collector, 1f, true);
 		poseStack.popPose();
 

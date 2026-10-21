@@ -22,6 +22,17 @@ loom {
 	}
 }
 
+fabricApi {
+	// Automatisierte Spieltests: ./gradlew runClientGameTest (startet echtes Minecraft)
+	configureTests {
+		createSourceSet = true
+		modId = "swmod-test"
+		enableGameTests = false
+		enableClientGameTests = true
+		eula = true // Mit true akzeptierst du die Minecraft-EULA (https://aka.ms/MinecraftEULA).
+	}
+}
+
 dependencies {
 	// To change the versions see the gradle.properties file
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"

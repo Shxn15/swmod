@@ -124,8 +124,8 @@ public final class SaberRenderer {
 		float center = (SaberGeometry.GRIP_TO_EMITTER - SaberGeometry.GRIP_TO_POMMEL) * 0.5f;
 		poseStack.pushPose();
 		poseStack.translate(grip.x + direction.x * center, grip.y + direction.y * center, grip.z + direction.z * center);
-		poseStack.mulPose(new Quaternionf().rotationTo(0, 1, 0, direction.x, direction.y, direction.z));
-		poseStack.mulPose(new Quaternionf().rotationY(roll));
+		poseStack.rotate(new Quaternionf().rotationTo(0, 1, 0, direction.x, direction.y, direction.z));
+		poseStack.rotate(new Quaternionf().rotationY(roll));
 		float scale = SaberGeometry.HILT_LENGTH;
 		poseStack.scale(scale, scale, scale);
 		hilt.submit(poseStack, collector, light, OverlayTexture.NO_OVERLAY, 0);

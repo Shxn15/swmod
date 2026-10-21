@@ -27,7 +27,7 @@ public final class SaberHud {
 
 	public static void render(GuiGraphicsExtractor graphics, DeltaTracker deltaTracker) {
 		Minecraft minecraft = Minecraft.getInstance();
-		if (minecraft.player == null || minecraft.options.hideGui || !Lightsabers.isLightsaber(minecraft.player.getMainHandItem())) {
+		if (minecraft.player == null || minecraft.gui.hud.isHidden() || !Lightsabers.isLightsaber(minecraft.player.getMainHandItem())) {
 			return;
 		}
 

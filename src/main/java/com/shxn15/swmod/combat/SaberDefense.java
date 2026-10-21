@@ -52,8 +52,8 @@ public final class SaberDefense {
 			SaberCombatSystem.sparks(level, contact, 40, attackerColor, defenderColor);
 			SaberCombatSystem.push(attacker, defender, 0.4);
 
-			defender.displayClientMessage(Component.translatable("message.swmod.perfect_parry").withStyle(ChatFormatting.GOLD), true);
-			attacker.displayClientMessage(Component.translatable("message.swmod.parried").withStyle(ChatFormatting.RED), true);
+			defender.sendOverlayMessage(Component.translatable("message.swmod.perfect_parry").withStyle(ChatFormatting.GOLD));
+			attacker.sendOverlayMessage(Component.translatable("message.swmod.parried").withStyle(ChatFormatting.RED));
 			return true;
 		}
 
@@ -165,7 +165,7 @@ public final class SaberDefense {
 			}
 			projectile.setOwner(defender);
 			projectile.setDeltaMovement(direction.scale(speed));
-			projectile.hurtMarked = true;
+			projectile.needsSync = true;
 		});
 	}
 }

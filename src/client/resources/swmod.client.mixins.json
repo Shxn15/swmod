@@ -3,8 +3,9 @@
 	"package": "com.shxn15.swmod.client.mixin",
 	"compatibilityLevel": "JAVA_25",
 	"client": [
+		"FirstPersonHandsAndItemsMixin",
+		"FirstPersonHandsAndItemsRendererMixin",
 		"HumanoidModelMixin",
-		"ItemInHandRendererMixin",
 		"LivingEntityRendererMixin",
 		"LivingEntityRenderStateMixin",
 		"MouseHandlerMixin"
