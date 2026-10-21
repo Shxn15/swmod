@@ -1,0 +1,30 @@
+{
+	"schemaVersion": 1,
+	"id": "swmod",
+	"version": "${version}",
+	"name": "Star Wars Mod",
+	"description": "Ein Star Wars Mod für Minecraft.",
+	"authors": [
+		"Shxn15"
+	],
+	"contact": {
+		"sources": "https://github.com/Shxn15/swmod"
+	},
+	"license": "All-Rights-Reserved",
+	"icon": "assets/swmod/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"com.shxn15.swmod.SwMod"
+		],
+		"client": [
+			"com.shxn15.swmod.client.SwModClient"
+		]
+	},
+	"depends": {
+		"fabricloader": ">=0.19.5",
+		"minecraft": "~26.3",
+		"java": ">=25",
+		"fabric-api": "*"
+	}
+}
