@@ -1,0 +1,17 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "misc",
+	"key": {
+		"A": "minecraft:amethyst_shard",
+		"G": "minecraft:gold_ingot",
+		"E": "minecraft:ender_eye"
+	},
+	"pattern": [
+		"AGA",
+		"GEG",
+		"AGA"
+	],
+	"result": {
+		"id": "swmod:holocron"
+	}
+}

@@ -2,6 +2,10 @@
 	"replace": false,
 	"values": [
 		"swmod:lightsaber",
-		"swmod:thrown_lightsaber"
+		"swmod:thrown_lightsaber",
+		"swmod:force",
+		"swmod:force_lightning",
+		"swmod:force_grip",
+		"swmod:force_impact"
 	]
 }

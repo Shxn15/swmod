@@ -3,11 +3,15 @@
 	"package": "com.shxn15.swmod.client.mixin",
 	"compatibilityLevel": "JAVA_25",
 	"client": [
+		"EntityRendererMixin",
 		"FirstPersonHandsAndItemsMixin",
 		"FirstPersonHandsAndItemsRendererMixin",
+		"GameRendererMixin",
+		"GuiGraphicsExtractorAccessor",
 		"HumanoidModelMixin",
 		"LivingEntityRendererMixin",
 		"LivingEntityRenderStateMixin",
+		"MinecraftMixin",
 		"MouseHandlerMixin"
 	],
 	"injectors": {

@@ -94,11 +94,40 @@ public final class SaberDefense {
 	}
 
 	/**
+	 * Machtblitze treffen einen Spieler. Hält er die Deckung in Richtung des Wirkenden, fängt die
+	 * Klinge die Blitze ab (kostet Blockpunkte) – wie Mace Windu gegen Palpatine.
+	 *
+	 * @return true, wenn die Blitze abgefangen wurden
+	 */
+	public static boolean tryBlockLightning(ServerPlayer defender, ServerPlayer caster, float cost) {
+		SaberCombatState state = SaberCombatSystem.state(defender);
+		int now = SaberCombatSystem.now();
+		if (!SaberCombatSystem.isBlocking(defender, state, now) || !SaberCombatSystem.isInFront(defender, caster.getEyePosition())) {
+			return false;
+		}
+
+		state.drainBlockPoints(cost, now);
+		ServerLevel level = defender.level();
+		Vec3 point = defender.getEyePosition().add(defender.getLookAngle().scale(0.7)).add(0, -0.2, 0);
+		SaberCombatSystem.sparks(level, point, 6, Lightsabers.color(defender.getUseItem()), 0xC8D8FF);
+		if (level.getRandom().nextInt(3) == 0) {
+			level.playSound(null, point.x, point.y, point.z, ModSounds.LIGHTSABER_DEFLECT, SoundSource.PLAYERS, 0.6f,
+					0.8f + level.getRandom().nextFloat() * 0.4f);
+		}
+
+		if (state.blockPoints <= 0) {
+			SaberCombatSystem.guardBreak(defender, state, caster, now);
+		}
+		return true;
+	}
+
+	/**
 	 * Fabric-Event: wird vor jedem Schaden an einem Wesen aufgerufen.
 	 * Blockt Nahkampf und Geschosse von vorne, wenn ein Spieler mit dem Lichtschwert die Deckung hält.
 	 */
 	static boolean allowDamage(LivingEntity entity, DamageSource source, float amount) {
-		if (!(entity instanceof ServerPlayer defender) || ModDamageTypes.isLightsaber(source) || source.is(DamageTypeTags.BYPASSES_SHIELD)) {
+		if (!(entity instanceof ServerPlayer defender) || ModDamageTypes.isLightsaber(source) || ModDamageTypes.isForce(source)
+				|| source.is(DamageTypeTags.BYPASSES_SHIELD)) {
 			return true;
 		}
 

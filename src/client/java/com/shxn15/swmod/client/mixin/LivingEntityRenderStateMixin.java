@@ -5,16 +5,24 @@ import org.spongepowered.asm.mixin.Unique;
 
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
 
+import com.shxn15.swmod.client.force.fx.ForceRenderData;
 import com.shxn15.swmod.client.render.SaberRenderData;
 
-/** Hängt unsere Lichtschwert-Daten an jeden Render-State eines Lebewesens. */
+/** Hängt unsere Lichtschwert- und Machtdaten an jeden Render-State eines Lebewesens. */
 @Mixin(LivingEntityRenderState.class)
-public abstract class LivingEntityRenderStateMixin implements SaberRenderData.Access {
+public abstract class LivingEntityRenderStateMixin implements SaberRenderData.Access, ForceRenderData.Access {
 	@Unique
 	private final SaberRenderData swmod$saberData = new SaberRenderData();
+	@Unique
+	private final ForceRenderData swmod$forceData = new ForceRenderData();
 
 	@Override
 	public SaberRenderData swmod$saberData() {
 		return this.swmod$saberData;
+	}
+
+	@Override
+	public ForceRenderData swmod$forceData() {
+		return this.swmod$forceData;
 	}
 }
