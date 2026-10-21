@@ -22,7 +22,6 @@ Kampfsystem inspiriert von *Movie Battles II*. Im Creative-Tab "Star Wars Mod" g
 - **Perfekte Parade** (Rechtsklick höchstens 0,3 s vor dem Treffer): kostet nichts, der Angreifer taumelt, und dein nächster Schlag kommt schneller (Konter). Pfeile fliegen dorthin zurück, wohin du schaust.
 - Sind die Blockpunkte leer, **bricht die Deckung**: kurz kein Blocken möglich.
 - Treffen zwei Schläge gleichzeitig aufeinander, **prallen die Klingen ab** (Funken, beide werden zurückgestoßen).
-
 - Mannequins können Lichtschwerter halten (gezündet als Deko).
 
 Alle Balance-Werte stehen in `combat/SaberTuning.java`.
