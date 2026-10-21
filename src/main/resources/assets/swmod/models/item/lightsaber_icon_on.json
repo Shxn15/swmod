@@ -1,0 +1,8 @@
+{
+	"parent": "minecraft:item/generated",
+	"textures": {
+		"layer0": "swmod:item/lightsaber_icon_hilt",
+		"layer1": "swmod:item/lightsaber_icon_glow",
+		"layer2": "swmod:item/lightsaber_icon_core"
+	}
+}

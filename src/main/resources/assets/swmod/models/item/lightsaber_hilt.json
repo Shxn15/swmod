@@ -1,0 +1,147 @@
+{
+	"textures": {
+		"hilt": "swmod:item/lightsaber_hilt",
+		"particle": "swmod:item/lightsaber_hilt"
+	},
+	"elements": [
+		{
+			"from": [6.2, 0, 6.2],
+			"to": [9.8, 1.6, 9.8],
+			"faces": {
+				"north": {"uv": [0, 0, 4, 2], "texture": "#hilt"},
+				"east": {"uv": [0, 0, 4, 2], "texture": "#hilt"},
+				"south": {"uv": [0, 0, 4, 2], "texture": "#hilt"},
+				"west": {"uv": [0, 0, 4, 2], "texture": "#hilt"},
+				"up": {"uv": [0, 2, 4, 6], "texture": "#hilt"},
+				"down": {"uv": [0, 2, 4, 6], "texture": "#hilt"}
+			}
+		},
+		{
+			"from": [6.5, 1.6, 6.5],
+			"to": [9.5, 8.6, 9.5],
+			"faces": {
+				"north": {"uv": [4, 0, 7, 7], "texture": "#hilt"},
+				"east": {"uv": [4, 0, 7, 7], "texture": "#hilt"},
+				"south": {"uv": [4, 0, 7, 7], "texture": "#hilt"},
+				"west": {"uv": [4, 0, 7, 7], "texture": "#hilt"}
+			}
+		},
+		{
+			"from": [7.6, 2.2, 6.2],
+			"to": [8.4, 8, 6.5],
+			"faces": {
+				"north": {"uv": [7, 0, 8, 6], "texture": "#hilt"},
+				"east": {"uv": [7, 0, 7.5, 6], "texture": "#hilt"},
+				"west": {"uv": [7, 0, 7.5, 6], "texture": "#hilt"},
+				"up": {"uv": [7, 0, 8, 0.5], "texture": "#hilt"},
+				"down": {"uv": [7, 0, 8, 0.5], "texture": "#hilt"}
+			}
+		},
+		{
+			"from": [7.6, 2.2, 9.5],
+			"to": [8.4, 8, 9.8],
+			"faces": {
+				"south": {"uv": [7, 0, 8, 6], "texture": "#hilt"},
+				"east": {"uv": [7, 0, 7.5, 6], "texture": "#hilt"},
+				"west": {"uv": [7, 0, 7.5, 6], "texture": "#hilt"},
+				"up": {"uv": [7, 0, 8, 0.5], "texture": "#hilt"},
+				"down": {"uv": [7, 0, 8, 0.5], "texture": "#hilt"}
+			}
+		},
+		{
+			"from": [6.2, 2.2, 7.6],
+			"to": [6.5, 8, 8.4],
+			"faces": {
+				"west": {"uv": [7, 0, 8, 6], "texture": "#hilt"},
+				"north": {"uv": [7, 0, 7.5, 6], "texture": "#hilt"},
+				"south": {"uv": [7, 0, 7.5, 6], "texture": "#hilt"},
+				"up": {"uv": [7, 0, 8, 0.5], "texture": "#hilt"},
+				"down": {"uv": [7, 0, 8, 0.5], "texture": "#hilt"}
+			}
+		},
+		{
+			"from": [9.5, 2.2, 7.6],
+			"to": [9.8, 8, 8.4],
+			"faces": {
+				"east": {"uv": [7, 0, 8, 6], "texture": "#hilt"},
+				"north": {"uv": [7, 0, 7.5, 6], "texture": "#hilt"},
+				"south": {"uv": [7, 0, 7.5, 6], "texture": "#hilt"},
+				"up": {"uv": [7, 0, 8, 0.5], "texture": "#hilt"},
+				"down": {"uv": [7, 0, 8, 0.5], "texture": "#hilt"}
+			}
+		},
+		{
+			"from": [6.3, 8.6, 6.3],
+			"to": [9.7, 9.4, 9.7],
+			"faces": {
+				"north": {"uv": [8, 0, 12, 1], "texture": "#hilt"},
+				"east": {"uv": [8, 0, 12, 1], "texture": "#hilt"},
+				"south": {"uv": [8, 0, 12, 1], "texture": "#hilt"},
+				"west": {"uv": [8, 0, 12, 1], "texture": "#hilt"},
+				"up": {"uv": [8, 0, 12, 1], "texture": "#hilt"},
+				"down": {"uv": [8, 0, 12, 1], "texture": "#hilt"}
+			}
+		},
+		{
+			"from": [6.4, 9.4, 6.4],
+			"to": [9.6, 13.4, 9.6],
+			"faces": {
+				"north": {"uv": [8, 1, 12, 5], "texture": "#hilt"},
+				"east": {"uv": [8, 1, 12, 5], "texture": "#hilt"},
+				"south": {"uv": [8, 1, 12, 5], "texture": "#hilt"},
+				"west": {"uv": [8, 1, 12, 5], "texture": "#hilt"}
+			}
+		},
+		{
+			"from": [9.6, 10, 7.2],
+			"to": [10.4, 12.2, 8.8],
+			"faces": {
+				"north": {"uv": [12, 0, 13, 3], "texture": "#hilt"},
+				"east": {"uv": [12, 0, 14, 3], "texture": "#hilt"},
+				"south": {"uv": [12, 0, 13, 3], "texture": "#hilt"},
+				"up": {"uv": [12, 0, 14, 1], "texture": "#hilt"},
+				"down": {"uv": [12, 0, 14, 1], "texture": "#hilt"}
+			}
+		},
+		{
+			"from": [10.4, 10.6, 7.6],
+			"to": [10.8, 11.4, 8.4],
+			"faces": {
+				"north": {"uv": [14, 0, 15, 2], "texture": "#hilt"},
+				"east": {"uv": [14, 0, 16, 2], "texture": "#hilt"},
+				"south": {"uv": [14, 0, 15, 2], "texture": "#hilt"},
+				"up": {"uv": [14, 0, 16, 1], "texture": "#hilt"},
+				"down": {"uv": [14, 0, 16, 1], "texture": "#hilt"}
+			}
+		},
+		{
+			"from": [6.1, 13.4, 6.1],
+			"to": [9.9, 16, 9.9],
+			"faces": {
+				"north": {"uv": [0, 6, 4, 9], "texture": "#hilt"},
+				"east": {"uv": [0, 6, 4, 9], "texture": "#hilt"},
+				"south": {"uv": [0, 6, 4, 9], "texture": "#hilt"},
+				"west": {"uv": [0, 6, 4, 9], "texture": "#hilt"},
+				"up": {"uv": [4, 8, 8, 12], "texture": "#hilt"},
+				"down": {"uv": [4, 8, 8, 12], "texture": "#hilt"}
+			}
+		}
+	],
+	"display": {
+		"ground": {
+			"rotation": [0, 0, 0],
+			"translation": [0, 1, 0],
+			"scale": [0.35, 0.35, 0.35]
+		},
+		"fixed": {
+			"rotation": [0, 0, -45],
+			"translation": [0, 0, 0],
+			"scale": [0.8, 0.8, 0.8]
+		},
+		"head": {
+			"rotation": [0, 0, 0],
+			"translation": [0, 13, 7],
+			"scale": [0.5, 0.5, 0.5]
+		}
+	}
+}

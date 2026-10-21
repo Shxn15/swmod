@@ -7,9 +7,19 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Rarity;
+
+import com.shxn15.swmod.lightsaber.LightsaberData;
+import com.shxn15.swmod.lightsaber.LightsaberItem;
+import com.shxn15.swmod.registry.ModDataComponents;
 
 public final class ModItems {
 	public static final Item RUBY = register("ruby", Item::new, new Item.Properties());
+
+	public static final Item LIGHTSABER = register("lightsaber", LightsaberItem::new, new Item.Properties()
+			.stacksTo(1)
+			.rarity(Rarity.EPIC)
+			.component(ModDataComponents.LIGHTSABER, LightsaberData.DEFAULT));
 
 	private ModItems() {
 	}

@@ -10,6 +10,9 @@ import net.minecraft.world.item.ItemStack;
 
 import net.fabricmc.fabric.api.creativetab.v1.FabricCreativeModeTab;
 
+import com.shxn15.swmod.lightsaber.BladeColor;
+import com.shxn15.swmod.lightsaber.Lightsabers;
+
 public final class ModCreativeTabs {
 	public static final ResourceKey<CreativeModeTab> SWMOD_TAB = ResourceKey.create(Registries.CREATIVE_MODE_TAB, SwMod.id("swmod"));
 
@@ -19,9 +22,12 @@ public final class ModCreativeTabs {
 	public static void init() {
 		Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, SWMOD_TAB, FabricCreativeModeTab.builder()
 				.title(Component.translatable("itemGroup.swmod"))
-				.icon(() -> new ItemStack(ModItems.RUBY))
+				.icon(() -> Lightsabers.create(BladeColor.BLUE))
 				.displayItems((context, output) -> {
-					output.accept(ModItems.RUBY);
+					for (BladeColor color : BladeColor.values()) {
+						output.accept(Lightsabers.create(color));
+					}
+					output.accept(new ItemStack(ModItems.RUBY));
 				})
 				.build());
 	}

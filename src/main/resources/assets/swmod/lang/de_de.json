@@ -1,4 +1,50 @@
 {
 	"item.swmod.ruby": "Rubin",
-	"itemGroup.swmod": "Star Wars Mod"
+	"item.swmod.lightsaber": "Lichtschwert",
+	"itemGroup.swmod": "Star Wars Mod",
+	"entity.swmod.thrown_lightsaber": "Geworfenes Lichtschwert",
+
+	"color.swmod.blue": "Blau",
+	"color.swmod.green": "Grün",
+	"color.swmod.red": "Rot",
+	"color.swmod.purple": "Lila",
+	"color.swmod.yellow": "Gelb",
+	"color.swmod.orange": "Orange",
+	"color.swmod.cyan": "Türkis",
+	"color.swmod.white": "Weiß",
+
+	"tooltip.swmod.lightsaber.color": "Klinge: %s",
+	"tooltip.swmod.lightsaber.on": "Gezündet",
+	"tooltip.swmod.lightsaber.off": "Ausgeschaltet",
+	"tooltip.swmod.lightsaber.controls.attack": "Linksklick halten + Maus bewegen: Schlag",
+	"tooltip.swmod.lightsaber.controls.block": "Rechtsklick: Blocken (rechtzeitig = Parade)",
+	"tooltip.swmod.lightsaber.controls.keys": "%s: An/Aus · %s: Werfen",
+
+	"key.category.swmod.lightsaber": "Star Wars Mod: Lichtschwert",
+	"key.swmod.toggle_saber": "Lichtschwert an/aus",
+	"key.swmod.throw_saber": "Lichtschwert werfen",
+
+	"message.swmod.perfect_parry": "Perfekte Parade!",
+	"message.swmod.parried": "Dein Schlag wurde pariert!",
+	"message.swmod.guard_broken": "Deine Deckung wurde durchbrochen!",
+	"message.swmod.guard_broken_other": "Deckung durchbrochen!",
+
+	"death.attack.swmod.lightsaber": "%1$s wurde von %2$s mit einem Lichtschwert niedergestreckt",
+	"death.attack.swmod.lightsaber.item": "%1$s wurde von %2$s mit %3$s niedergestreckt",
+	"death.attack.swmod.lightsaber.player": "%1$s wurde im Kampf gegen %2$s von einem Lichtschwert niedergestreckt",
+	"death.attack.swmod.thrown_lightsaber": "%1$s wurde von einem geworfenen Lichtschwert von %2$s getroffen",
+	"death.attack.swmod.thrown_lightsaber.item": "%1$s wurde von %2$s mit geworfenem %3$s getroffen",
+	"death.attack.swmod.thrown_lightsaber.player": "%1$s wurde im Kampf gegen %2$s von einem geworfenen Lichtschwert getroffen",
+
+	"subtitles.swmod.lightsaber.ignite": "Lichtschwert zündet",
+	"subtitles.swmod.lightsaber.retract": "Lichtschwert erlischt",
+	"subtitles.swmod.lightsaber.swing": "Lichtschwert schwingt",
+	"subtitles.swmod.lightsaber.hit": "Lichtschwert trifft",
+	"subtitles.swmod.lightsaber.clash": "Lichtschwerter prallen aufeinander",
+	"subtitles.swmod.lightsaber.block": "Lichtschwert blockt",
+	"subtitles.swmod.lightsaber.parry": "Perfekte Parade",
+	"subtitles.swmod.lightsaber.guard_break": "Deckung durchbrochen",
+	"subtitles.swmod.lightsaber.deflect": "Geschoss abgelenkt",
+	"subtitles.swmod.lightsaber.throw": "Lichtschwert wird geworfen",
+	"subtitles.swmod.lightsaber.catch": "Lichtschwert gefangen"
 }

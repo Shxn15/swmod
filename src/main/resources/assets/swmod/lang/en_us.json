@@ -1,4 +1,50 @@
 {
 	"item.swmod.ruby": "Ruby",
-	"itemGroup.swmod": "Star Wars Mod"
+	"item.swmod.lightsaber": "Lightsaber",
+	"itemGroup.swmod": "Star Wars Mod",
+	"entity.swmod.thrown_lightsaber": "Thrown Lightsaber",
+
+	"color.swmod.blue": "Blue",
+	"color.swmod.green": "Green",
+	"color.swmod.red": "Red",
+	"color.swmod.purple": "Purple",
+	"color.swmod.yellow": "Yellow",
+	"color.swmod.orange": "Orange",
+	"color.swmod.cyan": "Cyan",
+	"color.swmod.white": "White",
+
+	"tooltip.swmod.lightsaber.color": "Blade: %s",
+	"tooltip.swmod.lightsaber.on": "Ignited",
+	"tooltip.swmod.lightsaber.off": "Deactivated",
+	"tooltip.swmod.lightsaber.controls.attack": "Hold left click + move mouse: strike",
+	"tooltip.swmod.lightsaber.controls.block": "Right click: block (well timed = parry)",
+	"tooltip.swmod.lightsaber.controls.keys": "%s: on/off · %s: throw",
+
+	"key.category.swmod.lightsaber": "Star Wars Mod: Lightsaber",
+	"key.swmod.toggle_saber": "Toggle lightsaber",
+	"key.swmod.throw_saber": "Throw lightsaber",
+
+	"message.swmod.perfect_parry": "Perfect parry!",
+	"message.swmod.parried": "Your strike was parried!",
+	"message.swmod.guard_broken": "Your guard was broken!",
+	"message.swmod.guard_broken_other": "Guard broken!",
+
+	"death.attack.swmod.lightsaber": "%1$s was cut down by %2$s with a lightsaber",
+	"death.attack.swmod.lightsaber.item": "%1$s was cut down by %2$s using %3$s",
+	"death.attack.swmod.lightsaber.player": "%1$s was cut down by a lightsaber while fighting %2$s",
+	"death.attack.swmod.thrown_lightsaber": "%1$s was struck by %2$s's thrown lightsaber",
+	"death.attack.swmod.thrown_lightsaber.item": "%1$s was struck by %2$s's thrown %3$s",
+	"death.attack.swmod.thrown_lightsaber.player": "%1$s was struck by a thrown lightsaber while fighting %2$s",
+
+	"subtitles.swmod.lightsaber.ignite": "Lightsaber ignites",
+	"subtitles.swmod.lightsaber.retract": "Lightsaber retracts",
+	"subtitles.swmod.lightsaber.swing": "Lightsaber swings",
+	"subtitles.swmod.lightsaber.hit": "Lightsaber hits",
+	"subtitles.swmod.lightsaber.clash": "Lightsabers clash",
+	"subtitles.swmod.lightsaber.block": "Lightsaber blocks",
+	"subtitles.swmod.lightsaber.parry": "Perfect parry",
+	"subtitles.swmod.lightsaber.guard_break": "Guard broken",
+	"subtitles.swmod.lightsaber.deflect": "Projectile deflected",
+	"subtitles.swmod.lightsaber.throw": "Lightsaber thrown",
+	"subtitles.swmod.lightsaber.catch": "Lightsaber caught"
 }

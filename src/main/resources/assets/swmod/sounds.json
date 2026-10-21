@@ -1,0 +1,52 @@
+{
+	"lightsaber.ignite": {
+		"subtitle": "subtitles.swmod.lightsaber.ignite",
+		"sounds": ["swmod:lightsaber/ignite"]
+	},
+	"lightsaber.retract": {
+		"subtitle": "subtitles.swmod.lightsaber.retract",
+		"sounds": ["swmod:lightsaber/retract"]
+	},
+	"lightsaber.hum": {
+		"sounds": ["swmod:lightsaber/hum"]
+	},
+	"lightsaber.swing": {
+		"subtitle": "subtitles.swmod.lightsaber.swing",
+		"sounds": ["swmod:lightsaber/swing1", "swmod:lightsaber/swing2", "swmod:lightsaber/swing3"]
+	},
+	"lightsaber.hit": {
+		"subtitle": "subtitles.swmod.lightsaber.hit",
+		"sounds": ["swmod:lightsaber/hit1", "swmod:lightsaber/hit2"]
+	},
+	"lightsaber.clash": {
+		"subtitle": "subtitles.swmod.lightsaber.clash",
+		"sounds": ["swmod:lightsaber/clash1", "swmod:lightsaber/clash2", "swmod:lightsaber/clash3"]
+	},
+	"lightsaber.block": {
+		"subtitle": "subtitles.swmod.lightsaber.block",
+		"sounds": ["swmod:lightsaber/block1", "swmod:lightsaber/block2"]
+	},
+	"lightsaber.parry": {
+		"subtitle": "subtitles.swmod.lightsaber.parry",
+		"sounds": ["swmod:lightsaber/parry"]
+	},
+	"lightsaber.guard_break": {
+		"subtitle": "subtitles.swmod.lightsaber.guard_break",
+		"sounds": ["swmod:lightsaber/guard_break"]
+	},
+	"lightsaber.deflect": {
+		"subtitle": "subtitles.swmod.lightsaber.deflect",
+		"sounds": ["swmod:lightsaber/deflect1", "swmod:lightsaber/deflect2"]
+	},
+	"lightsaber.throw": {
+		"subtitle": "subtitles.swmod.lightsaber.throw",
+		"sounds": ["swmod:lightsaber/throw"]
+	},
+	"lightsaber.spin": {
+		"sounds": ["swmod:lightsaber/spin"]
+	},
+	"lightsaber.catch": {
+		"subtitle": "subtitles.swmod.lightsaber.catch",
+		"sounds": ["swmod:lightsaber/catch"]
+	}
+}

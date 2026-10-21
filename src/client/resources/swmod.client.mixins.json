@@ -1,0 +1,18 @@
+{
+	"required": true,
+	"package": "com.shxn15.swmod.client.mixin",
+	"compatibilityLevel": "JAVA_25",
+	"client": [
+		"HumanoidModelMixin",
+		"ItemInHandRendererMixin",
+		"LivingEntityRendererMixin",
+		"LivingEntityRenderStateMixin",
+		"MouseHandlerMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	},
+	"overwrites": {
+		"requireAnnotations": true
+	}
+}

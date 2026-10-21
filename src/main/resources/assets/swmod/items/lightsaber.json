@@ -1,0 +1,56 @@
+{
+	"model": {
+		"type": "minecraft:select",
+		"property": "minecraft:display_context",
+		"cases": [
+			{
+				"when": [
+					"firstperson_righthand",
+					"firstperson_lefthand",
+					"thirdperson_righthand",
+					"thirdperson_lefthand"
+				],
+				"model": {
+					"type": "minecraft:empty"
+				}
+			},
+			{
+				"when": "gui",
+				"model": {
+					"type": "minecraft:condition",
+					"property": "swmod:lightsaber_ignited",
+					"on_true": {
+						"type": "minecraft:model",
+						"model": "swmod:item/lightsaber_icon_on",
+						"tints": [
+							{
+								"type": "minecraft:constant",
+								"value": -1
+							},
+							{
+								"type": "swmod:blade_color"
+							}
+						]
+					},
+					"on_false": {
+						"type": "minecraft:model",
+						"model": "swmod:item/lightsaber_icon_off",
+						"tints": [
+							{
+								"type": "minecraft:constant",
+								"value": -1
+							},
+							{
+								"type": "swmod:blade_color"
+							}
+						]
+					}
+				}
+			}
+		],
+		"fallback": {
+			"type": "minecraft:model",
+			"model": "swmod:item/lightsaber_hilt"
+		}
+	}
+}
