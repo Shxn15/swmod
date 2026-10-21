@@ -16,6 +16,7 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import com.shxn15.swmod.SwMod;
 import com.shxn15.swmod.client.anim.SaberAnimState;
 import com.shxn15.swmod.client.anim.SaberAnimations;
+import com.shxn15.swmod.client.force.ForceInput;
 import com.shxn15.swmod.combat.SwingDirection;
 import com.shxn15.swmod.lightsaber.LightsaberData;
 import com.shxn15.swmod.lightsaber.Lightsabers;
@@ -47,12 +48,26 @@ public final class SaberInput {
 	private static final double CAMERA_DAMPING = 0.35;
 	/** Nach so vielen Ticks ohne Mausbewegung wird ein gehaltener Klick zum Standardangriff. */
 	private static final int CLICK_TIMEOUT = 7;
+	/** Weniger Mausbewegung pro Tick (Grad) gilt als "Maus steht still": der aktuelle Mauszug ist zu Ende. */
+	private static final double REST_MOVEMENT = 0.4;
+	/** So viele ruhige Ticks beenden einen Mauszug. */
+	private static final int REST_TICKS = 2;
+	/** Während eines Mauszugs startet nur eine deutliche Richtungsänderung (Kosinus darunter) einen neuen Schlag. */
+	private static final double NEW_STROKE_MAX_DOT = -0.2;
 
 	private static boolean attackHeld;
 	private static boolean gestureUsed;
 	private static int heldTicks;
 	private static double gestureX;
 	private static double gestureY;
+
+	// Ein Mauszug löst genau einen Schlag aus. Bewegt man die Maus danach in dieselbe Richtung weiter,
+	// gehört das noch zum selben Zug (früher kam so fast immer ein zweiter Schlag hinterher).
+	private static boolean strokeLocked;
+	private static double strokeX;
+	private static double strokeY;
+	private static double tickMovement;
+	private static int restTicks;
 
 	// Vom Server gemeldeter Status (für HUD und Vorhersage).
 	private static float blockPoints = 100f;
@@ -158,7 +173,7 @@ public final class SaberInput {
 	}
 
 	private static void handleAttack(Minecraft minecraft, LocalPlayer player) {
-		boolean ready = isSaberReady(minecraft) && minecraft.gui.screen() == null;
+		boolean ready = isSaberReady(minecraft) && minecraft.gui.screen() == null && !ForceInput.blocksAttack();
 		boolean down = ready && minecraft.options.keyAttack.isDown();
 
 		// Auch Klicks zählen, die zwischen zwei Ticks gedrückt UND losgelassen wurden.
@@ -173,11 +188,19 @@ public final class SaberInput {
 		gestureX *= 0.55;
 		gestureY *= 0.55;
 
+		// Steht die Maus kurz still, ist der Mauszug vorbei und der nächste darf wieder schlagen.
+		restTicks = tickMovement < REST_MOVEMENT ? restTicks + 1 : 0;
+		tickMovement = 0;
+		if (restTicks >= REST_TICKS) {
+			strokeLocked = false;
+		}
+
 		if (!down && !attackHeld && clicks > 0) {
 			requestSwing(minecraft, player, directionFromKeys(minecraft));
 		} else if (down && !attackHeld) {
 			attackHeld = true;
 			gestureUsed = false;
+			strokeLocked = false;
 			heldTicks = 0;
 			gestureX = 0;
 			gestureY = 0;
@@ -217,23 +240,35 @@ public final class SaberInput {
 	 */
 	public static double onMouseMove(double dx, double dy) {
 		Minecraft minecraft = Minecraft.getInstance();
-		if (!attackHeld || !isSaberReady(minecraft) || minecraft.gui.screen() != null) {
+		if (!attackHeld || !isSaberReady(minecraft) || minecraft.gui.screen() != null || ForceInput.blocksAttack()) {
 			return 1.0;
 		}
 
 		// Gleiche Umrechnung wie Vanilla: Pixel -> Drehung in Grad.
 		double sensitivity = minecraft.options.sensitivity().get() * 0.6 + 0.2;
 		double degreesPerPixel = sensitivity * sensitivity * sensitivity * 8.0 * 0.15;
-		gestureX += dx * degreesPerPixel;
-		gestureY -= dy * degreesPerPixel; // Bildschirm-y zeigt nach unten
+		double mx = dx * degreesPerPixel;
+		double my = -dy * degreesPerPixel; // Bildschirm-y zeigt nach unten
+		gestureX += mx;
+		gestureY += my;
+		tickMovement += Math.sqrt(mx * mx + my * my);
 
 		double magnitude = Math.sqrt(gestureX * gestureX + gestureY * gestureY);
 		if (magnitude >= GESTURE_THRESHOLD && minecraft.player != null) {
-			SwingDirection direction = SwingDirection.fromScreenVector(gestureX, gestureY);
+			double nx = gestureX / magnitude;
+			double ny = gestureY / magnitude;
 			gestureX = 0;
 			gestureY = 0;
-			gestureUsed = true;
-			requestSwing(minecraft, minecraft.player, direction);
+
+			// Derselbe Mauszug geht weiter (auch in leichter Kurve): kein neuer Schlag, nur Richtung nachführen.
+			boolean sameStroke = strokeLocked && nx * strokeX + ny * strokeY > NEW_STROKE_MAX_DOT;
+			strokeLocked = true;
+			strokeX = nx;
+			strokeY = ny;
+			if (!sameStroke) {
+				gestureUsed = true;
+				requestSwing(minecraft, minecraft.player, SwingDirection.fromScreenVector(nx, ny));
+			}
 		}
 
 		return CAMERA_DAMPING;

@@ -68,25 +68,31 @@ public class LightsaberClientGameTest implements FabricClientGameTest {
 			context.takeScreenshot("02_ignited_fp");
 
 			// --- Schlag per Mausgeste (links -> rechts) ---
+			// Die Bewegung verteilt sich wie bei einer echten Maus über mehrere Frames: das ist
+			// trotzdem nur EIN Mauszug und darf nur einen Schlag auslösen (früher kamen zwei).
 			input.holdKey(options -> options.keyAttack);
 			context.waitTick();
 			float yawBefore = context.computeOnClient(mc -> mc.player.getYRot());
-			input.moveCursor(160, 0);
-			context.waitTicks(5);
+			for (int step = 0; step < 4; step++) {
+				input.moveCursor(40, 0);
+				context.waitTick();
+			}
+			context.waitTicks(2);
 			String mouseInfo = context.computeOnClient(mc -> "grabbed=" + mc.mouseHandler.isMouseGrabbed()
 					+ " windowActive=" + mc.isWindowActive() + " yaw " + yawBefore + " -> " + mc.player.getYRot()
 					+ " letzteGeste=" + SaberInput.lastDirection() + " vor " + SaberInput.ticksSinceLastDirection() + " Ticks");
 			SwMod.LOGGER.info("[Test] Maus: {}", mouseInfo);
-			this.check(context.computeOnClient(mc -> SaberInput.ticksSinceLastDirection() <= 6 && SaberInput.lastDirection() == SwingDirection.RIGHT),
+			this.check(context.computeOnClient(mc -> SaberInput.ticksSinceLastDirection() <= 10 && SaberInput.lastDirection() == SwingDirection.RIGHT),
 					"Mausgeste nach rechts sollte einen Schlag nach rechts auslösen (" + mouseInfo + ")");
 			context.takeScreenshot("03_swing_fp");
 			context.waitTicks(12);
 			input.releaseKey(options -> options.keyAttack);
 			context.waitTicks(5);
 
+			context.waitTicks(15);
 			float health = server.computeOnServer(s -> zombieHealth(s.overworld().getAllEntities()));
-			// 10 Schaden minus Zombie-Grundrüstung (2 Punkte) = 9,84
-			this.check(health > 9.5f && health < 10.5f, "Zombie sollte nach einem Treffer ca. 10 Leben haben, hat aber " + health);
+			// 10 Schaden minus Zombie-Grundrüstung (2 Punkte) = 9,84. Ein zweiter (doppelter) Schlag hätte ihn fast getötet.
+			this.check(health > 9.5f && health < 10.5f, "Zombie sollte nach genau einem Treffer ca. 10 Leben haben, hat aber " + health);
 
 			// --- Blocken ---
 			input.holdKey(options -> options.keyUse);

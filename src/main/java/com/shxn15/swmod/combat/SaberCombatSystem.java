@@ -163,6 +163,12 @@ public final class SaberCombatSystem {
 		}
 	}
 
+	/** Ist der Spieler gerade mitten in einem Schlag oder benommen? Dann kann er auch keine Macht wirken. */
+	public static boolean isBusy(Player player) {
+		SaberCombatState state = STATES.get(player.getUUID());
+		return state != null && (now() < state.stunnedUntil || state.isCommitted());
+	}
+
 	/** Darf der Spieler gerade die Deckung heben? (Aufruf aus {@code LightsaberItem#use}) */
 	public static boolean canStartBlocking(Player player) {
 		SaberCombatState state = STATES.get(player.getUUID());
@@ -397,7 +403,7 @@ public final class SaberCombatSystem {
 		}
 
 		ServerLevel level = attacker.level();
-		target.setInvulnerableTime(0); // Kombos sollen ohne Unverwundbarkeits-Pause treffen
+		ModDamageTypes.skipHurtCooldown(target); // Kombos sollen ohne Unverwundbarkeits-Pause treffen
 		if (target.hurtServer(level, ModDamageTypes.lightsaber(level, attacker), SaberTuning.DAMAGE)) {
 			level.playSound(null, contact.x, contact.y, contact.z, ModSounds.LIGHTSABER_HIT, SoundSource.PLAYERS, 1.0f,
 					0.9f + level.getRandom().nextFloat() * 0.2f);

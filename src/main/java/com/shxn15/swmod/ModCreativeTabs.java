@@ -27,6 +27,7 @@ public final class ModCreativeTabs {
 					for (BladeColor color : BladeColor.values()) {
 						output.accept(Lightsabers.create(color));
 					}
+					output.accept(new ItemStack(ModItems.HOLOCRON));
 					output.accept(new ItemStack(ModItems.RUBY));
 				})
 				.build());

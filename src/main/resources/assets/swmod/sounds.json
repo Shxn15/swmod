@@ -48,5 +48,82 @@
 	"lightsaber.catch": {
 		"subtitle": "subtitles.swmod.lightsaber.catch",
 		"sounds": ["swmod:lightsaber/catch"]
+	},
+	"force.push": {
+		"subtitle": "subtitles.swmod.force.push",
+		"sounds": ["swmod:force/push"]
+	},
+	"force.pull": {
+		"subtitle": "subtitles.swmod.force.pull",
+		"sounds": ["swmod:force/pull"]
+	},
+	"force.grab": {
+		"subtitle": "subtitles.swmod.force.grab",
+		"sounds": ["swmod:force/grab"]
+	},
+	"force.grab_loop": {
+		"sounds": ["swmod:force/grab_loop"]
+	},
+	"force.throw": {
+		"subtitle": "subtitles.swmod.force.throw",
+		"sounds": ["swmod:force/throw"]
+	},
+	"force.speed": {
+		"subtitle": "subtitles.swmod.force.speed",
+		"sounds": ["swmod:force/speed"]
+	},
+	"force.speed_end": {
+		"subtitle": "subtitles.swmod.force.speed_end",
+		"sounds": ["swmod:force/speed_end"]
+	},
+	"force.heal": {
+		"subtitle": "subtitles.swmod.force.heal",
+		"sounds": ["swmod:force/heal"]
+	},
+	"force.lightning": {
+		"subtitle": "subtitles.swmod.force.lightning",
+		"sounds": ["swmod:force/lightning"]
+	},
+	"force.lightning_loop": {
+		"sounds": ["swmod:force/lightning_loop"]
+	},
+	"force.lightning_hit": {
+		"subtitle": "subtitles.swmod.force.lightning_hit",
+		"sounds": ["swmod:force/lightning_hit"]
+	},
+	"force.grip": {
+		"subtitle": "subtitles.swmod.force.grip",
+		"sounds": ["swmod:force/grip"]
+	},
+	"force.grip_loop": {
+		"sounds": ["swmod:force/grip_loop"]
+	},
+	"force.impact": {
+		"subtitle": "subtitles.swmod.force.impact",
+		"sounds": ["swmod:force/impact"]
+	},
+	"force.fail": {
+		"sounds": ["swmod:force/fail"]
+	},
+	"force.wheel_open": {
+		"sounds": ["swmod:force/wheel_open"]
+	},
+	"force.wheel_tick": {
+		"sounds": ["swmod:force/wheel_tick"]
+	},
+	"force.wheel_select": {
+		"sounds": ["swmod:force/wheel_select"]
+	},
+	"holocron.open": {
+		"subtitle": "subtitles.swmod.holocron.open",
+		"sounds": ["swmod:holocron/open"]
+	},
+	"holocron.learn": {
+		"subtitle": "subtitles.swmod.holocron.learn",
+		"sounds": ["swmod:holocron/learn"]
+	},
+	"holocron.upgrade": {
+		"subtitle": "subtitles.swmod.holocron.upgrade",
+		"sounds": ["swmod:holocron/upgrade"]
 	}
 }

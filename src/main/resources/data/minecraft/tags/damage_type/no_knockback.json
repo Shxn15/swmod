@@ -1,0 +1,9 @@
+{
+	"replace": false,
+	"values": [
+		"swmod:force",
+		"swmod:force_lightning",
+		"swmod:force_grip",
+		"swmod:force_impact"
+	]
+}

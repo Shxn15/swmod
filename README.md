@@ -26,6 +26,46 @@ Kampfsystem inspiriert von *Movie Battles II*. Im Creative-Tab "Star Wars Mod" g
 
 Alle Balance-Werte stehen in `combat/SaberTuning.java`.
 
+### Die Macht
+Fähigkeiten lernt und verbessert man im **Holocron** (Rezept: Amethystscherben in den Ecken,
+Goldbarren an den Seiten, Enderauge in der Mitte). Rechtsklick mit dem Holocron öffnet es:
+Fähigkeit anklicken, mit Erfahrungsstufen lernen bzw. aufwerten (3 Stufen je Fähigkeit) und per
+Ziehen oder Zahlentaste 1–8 auf einen Platz des Fähigkeitenrads legen.
+
+| Eingabe | Aktion |
+| --- | --- |
+| **C halten** | Fähigkeitenrad öffnen, mit der Maus wählen, Loslassen übernimmt. Mitte = keine Fähigkeit |
+| **C kurz antippen** | Rad bleibt offen: Klick, C oder 1–8 wählt, 9 = keine Fähigkeit, Mausrad blättert |
+| **Rechtsklick** | Gewählte Fähigkeit wirken (Blitze, Griff und Würgen: halten) |
+| **Mausrad** (beim Machtgriff) | Gegriffenes näher heranholen / weiter wegschieben |
+| **Linksklick** (beim Machtgriff) | Gegriffenes in Blickrichtung schleudern |
+
+Ist keine Fähigkeit gewählt (oder hält man das Holocron), funktioniert Rechtsklick ganz normal
+(Blocken, Bauen, Essen).
+
+| Fähigkeit | Wirkung | Ab Stufe 2/3 |
+| --- | --- | --- |
+| **Machtstoß** | Druckwelle schleudert alles im Blickkegel weg; wer gegen eine Wand prallt, nimmt Schaden. Geschosse fliegen zurück | mehr Reichweite, Breite und Wucht |
+| **Machtzug** | Zieht Gegner, Items und Erfahrung heran | Stufe 3 reißt Mobs die Waffe aus der Hand |
+| **Machtgriff** | Hebt ein Wesen leuchtend an (wie in LEGO Star Wars III), man trägt es mit dem Blick herum | größere Wesen, stärkerer Wurf |
+| **Machtgeschwindigkeit** | +60 % Tempo mit Lichtschlieren und Speedlines im Bild | +100 %/+150 %, länger, Stufen hochlaufen, weicher landen |
+| **Machtheilung** | Heilt 3 Herzen plus Regeneration | heilt Gift/Wither, auf Stufe 3 auch Verbündete in der Nähe |
+| **Machtblitze** | Halten: animierte Blitze aus der Hand in Gegner im Blickkegel | mehr Ziele, Stufe 3 springt auf weitere Gegner über |
+| **Machtwürgen** | Halten: Opfer schwebt rot leuchtend in der Luft und verliert stetig Leben (ignoriert Rüstung) | mehr Schaden, Stufe 3 schleudert beim Loslassen |
+
+- Die **Machtleiste** sitzt direkt unter der XP-Leiste und funktioniert wie Energie: Wirken kostet
+  Macht, Blitze/Griff/Würgen verbrauchen laufend, nach kurzer Pause lädt sie sich von selbst wieder
+  auf. Jede gelernte Stufe vergrößert den Vorrat (100 + 4 je Stufe).
+- Rechts neben der Hotbar zeigt ein Abzeichen die gewählte Fähigkeit samt Abklingzeit.
+- Ein Lichtschwert in Deckung fängt Machtblitze ab (kostet Blockpunkte).
+- Befehl für Tests und Server: `/force learn <Spieler> <Fähigkeit> [Stufe]`, `/force learnall <Spieler>`,
+  `/force reset <Spieler>`, `/force refill <Spieler>`.
+
+Alle Balance-Werte stehen in `force/ForceTuning.java`. Neue Fähigkeiten: Klasse von `ForceAbility`
+ableiten, in `ForceAbilities` registrieren (andere Mods über `ForceAbilities.register`), Symbol unter
+`textures/gui/sprites/force/<name>.png` und Übersetzungen `force.<namespace>.<name>` und `….desc` –
+Holocron, Rad und HUD finden sie automatisch.
+
 ### Sonstiges
 - Rubin (`swmod:ruby`) als erstes Test-Item
 
@@ -38,14 +78,16 @@ Voraussetzung: **JDK 25**.
 ```
 
 Automatischer Spieltest (startet ein echtes Minecraft, spielt das Lichtschwert in Einzelspieler
-und auf einem dedizierten Server durch und macht Screenshots in `build/run/clientGameTest/screenshots`):
+und auf einem dedizierten Server sowie Holocron, Fähigkeitenrad und alle Machtfähigkeiten durch und
+macht Screenshots in `build/run/clientGameTest/screenshots`):
 
 ```bash
 ./gradlew runClientGameTest
 ```
 
-Texturen und Sounds des Lichtschwerts werden prozedural erzeugt (keine fremden Assets):
+Texturen und Sounds (Lichtschwert, Machtfähigkeiten, Holocron) werden prozedural erzeugt (keine fremden Assets):
 
 ```bash
-python3 tools/generate_assets.py   # braucht numpy, Pillow und ffmpeg
+python3 tools/generate_assets.py         # alles; braucht numpy, Pillow und ffmpeg
+python3 tools/generate_assets.py force   # nur die Macht-Assets
 ```

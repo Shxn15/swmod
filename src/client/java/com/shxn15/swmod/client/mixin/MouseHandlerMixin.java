@@ -8,6 +8,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import net.minecraft.client.MouseHandler;
 
+import com.shxn15.swmod.client.force.ForceInput;
 import com.shxn15.swmod.client.input.SaberInput;
 
 /**
@@ -25,6 +26,13 @@ public abstract class MouseHandlerMixin {
 	@Inject(method = "turnPlayer", at = @At("HEAD"))
 	private void swmod$saberGesture(double movementTime, CallbackInfo ci) {
 		if (this.accumulatedDX == 0 && this.accumulatedDY == 0) {
+			return;
+		}
+
+		// Offenes Fähigkeitenrad: die Maus bewegt den Wahlzeiger, nicht die Kamera.
+		if (ForceInput.onMouseMove(this.accumulatedDX, this.accumulatedDY)) {
+			this.accumulatedDX = 0;
+			this.accumulatedDY = 0;
 			return;
 		}
 

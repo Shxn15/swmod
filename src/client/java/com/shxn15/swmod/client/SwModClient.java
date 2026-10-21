@@ -2,6 +2,7 @@ package com.shxn15.swmod.client;
 
 import net.minecraft.client.color.item.ItemTintSources;
 import net.minecraft.client.renderer.entity.EntityRenderers;
+import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.player.AvatarRenderer;
 import net.minecraft.client.renderer.item.properties.conditional.ConditionalItemModelProperties;
 
@@ -17,6 +18,9 @@ import net.fabricmc.fabric.api.event.client.player.ClientPreAttackCallback;
 
 import com.shxn15.swmod.SwMod;
 import com.shxn15.swmod.client.anim.SaberAnimations;
+import com.shxn15.swmod.client.force.ForceClient;
+import com.shxn15.swmod.client.force.ForceInput;
+import com.shxn15.swmod.client.force.fx.ForceAuraLayer;
 import com.shxn15.swmod.client.hud.SaberHud;
 import com.shxn15.swmod.client.input.SaberInput;
 import com.shxn15.swmod.client.item.BladeColorTintSource;
@@ -36,16 +40,23 @@ public class SwModClient implements ClientModInitializer {
 	public void onInitializeClient() {
 		SaberInput.init();
 		SaberRenderTypes.init();
+		ForceClient.init();
 
 		// Eingaben vor der Vanilla-Tastenverarbeitung, damit F/X mit Lichtschwert uns gehören.
-		ClientTickEvents.START_CLIENT_TICK.register(SaberInput::startTick);
+		// Die Macht zuerst: ihr Rad und ihr Rechtsklick haben Vorrang vor dem Lichtschwert.
+		ClientTickEvents.START_CLIENT_TICK.register(client -> {
+			ForceInput.startTick(client);
+			SaberInput.startTick(client);
+		});
 		ClientTickEvents.END_CLIENT_TICK.register(client -> {
 			SaberAnimations.tick(client);
 			SaberSounds.tick(client);
+			ForceClient.tick(client);
 		});
 
 		// Mit gezündetem Lichtschwert ersetzt unser Kampfsystem den normalen Angriff und das Abbauen.
-		ClientPreAttackCallback.EVENT.register((client, player, clickCount) -> SaberInput.isSaberReady(client));
+		// Solange das Fähigkeitenrad offen ist (oder ein Klick es gerade geschlossen hat), gibt es keinen Angriff.
+		ClientPreAttackCallback.EVENT.register((client, player, clickCount) -> SaberInput.isSaberReady(client) || ForceInput.blocksAttack());
 		LightsaberItem.clientCanBlock = player -> SaberInput.canBlock();
 
 		ClientPlayNetworking.registerGlobalReceiver(SaberAnimPayload.TYPE, (payload, context) -> SaberAnimations.handle(payload));
@@ -53,6 +64,7 @@ public class SwModClient implements ClientModInitializer {
 		ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> {
 			SaberAnimations.clear();
 			SaberSounds.clear();
+			ForceClient.clear();
 		});
 
 		EntityRenderers.register(ModEntityTypes.THROWN_LIGHTSABER, ThrownLightsaberRenderer::new);
@@ -60,11 +72,19 @@ public class SwModClient implements ClientModInitializer {
 			if (entityRenderer instanceof AvatarRenderer<?> avatarRenderer) {
 				registrationHelper.register(new SaberLayer<>(avatarRenderer));
 			}
+			// Leuchtende Energiehülle für alles, was von der Macht gehalten wird.
+			registerAura(entityRenderer, registrationHelper);
 		});
 
 		HudElementRegistry.attachElementAfter(VanillaHudElements.CROSSHAIR, SwMod.id("lightsaber_hud"), SaberHud::render);
 		ItemTooltipCallback.EVENT.register(LightsaberTooltip::append);
 		ItemTintSources.ID_MAPPER.put(SwMod.id("blade_color"), BladeColorTintSource.MAP_CODEC);
 		ConditionalItemModelProperties.ID_MAPPER.put(SwMod.id("lightsaber_ignited"), LightsaberIgnitedProperty.MAP_CODEC);
+	}
+
+	@SuppressWarnings({"unchecked", "rawtypes"})
+	private static void registerAura(LivingEntityRenderer<?, ?, ?> renderer, LivingEntityRenderLayerRegistrationCallback.RegistrationHelper helper) {
+		// Die Layer-Typen lassen sich für beliebige Renderer nicht generisch ausdrücken.
+		helper.register(new ForceAuraLayer(renderer));
 	}
 }

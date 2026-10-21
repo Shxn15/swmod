@@ -9,6 +9,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
 
+import com.shxn15.swmod.force.HolocronItem;
 import com.shxn15.swmod.lightsaber.LightsaberData;
 import com.shxn15.swmod.lightsaber.LightsaberItem;
 import com.shxn15.swmod.registry.ModDataComponents;
@@ -20,6 +21,10 @@ public final class ModItems {
 			.stacksTo(1)
 			.rarity(Rarity.EPIC)
 			.component(ModDataComponents.LIGHTSABER, LightsaberData.DEFAULT));
+
+	public static final Item HOLOCRON = register("holocron", HolocronItem::new, new Item.Properties()
+			.stacksTo(1)
+			.rarity(Rarity.EPIC));
 
 	private ModItems() {
 	}

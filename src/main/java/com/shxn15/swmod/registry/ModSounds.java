@@ -22,6 +22,28 @@ public final class ModSounds {
 	public static final SoundEvent LIGHTSABER_SPIN = register("lightsaber.spin");
 	public static final SoundEvent LIGHTSABER_CATCH = register("lightsaber.catch");
 
+	public static final SoundEvent FORCE_PUSH = register("force.push");
+	public static final SoundEvent FORCE_PULL = register("force.pull");
+	public static final SoundEvent FORCE_GRAB = register("force.grab");
+	public static final SoundEvent FORCE_GRAB_LOOP = register("force.grab_loop");
+	public static final SoundEvent FORCE_THROW = register("force.throw");
+	public static final SoundEvent FORCE_SPEED = register("force.speed");
+	public static final SoundEvent FORCE_SPEED_END = register("force.speed_end");
+	public static final SoundEvent FORCE_HEAL = register("force.heal");
+	public static final SoundEvent FORCE_LIGHTNING = register("force.lightning");
+	public static final SoundEvent FORCE_LIGHTNING_LOOP = register("force.lightning_loop");
+	public static final SoundEvent FORCE_LIGHTNING_HIT = register("force.lightning_hit");
+	public static final SoundEvent FORCE_GRIP = register("force.grip");
+	public static final SoundEvent FORCE_GRIP_LOOP = register("force.grip_loop");
+	public static final SoundEvent FORCE_IMPACT = register("force.impact");
+	public static final SoundEvent FORCE_FAIL = register("force.fail");
+	public static final SoundEvent FORCE_WHEEL_OPEN = register("force.wheel_open");
+	public static final SoundEvent FORCE_WHEEL_TICK = register("force.wheel_tick");
+	public static final SoundEvent FORCE_WHEEL_SELECT = register("force.wheel_select");
+	public static final SoundEvent HOLOCRON_OPEN = register("holocron.open");
+	public static final SoundEvent HOLOCRON_LEARN = register("holocron.learn");
+	public static final SoundEvent HOLOCRON_UPGRADE = register("holocron.upgrade");
+
 	private ModSounds() {
 	}
 
