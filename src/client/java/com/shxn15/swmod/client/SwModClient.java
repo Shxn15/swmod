@@ -23,6 +23,7 @@ import com.shxn15.swmod.client.item.BladeColorTintSource;
 import com.shxn15.swmod.client.item.LightsaberIgnitedProperty;
 import com.shxn15.swmod.client.item.LightsaberTooltip;
 import com.shxn15.swmod.client.render.SaberLayer;
+import com.shxn15.swmod.client.render.SaberRenderTypes;
 import com.shxn15.swmod.client.render.ThrownLightsaberRenderer;
 import com.shxn15.swmod.client.sound.SaberSounds;
 import com.shxn15.swmod.lightsaber.LightsaberItem;
@@ -34,6 +35,7 @@ public class SwModClient implements ClientModInitializer {
 	@Override
 	public void onInitializeClient() {
 		SaberInput.init();
+		SaberRenderTypes.init();
 
 		// Eingaben vor der Vanilla-Tastenverarbeitung, damit F/X mit Lichtschwert uns gehören.
 		ClientTickEvents.START_CLIENT_TICK.register(SaberInput::startTick);

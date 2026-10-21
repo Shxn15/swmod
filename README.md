@@ -23,6 +23,8 @@ Kampfsystem inspiriert von *Movie Battles II*. Im Creative-Tab "Star Wars Mod" g
 - Sind die Blockpunkte leer, **bricht die Deckung**: kurz kein Blocken möglich.
 - Treffen zwei Schläge gleichzeitig aufeinander, **prallen die Klingen ab** (Funken, beide werden zurückgestoßen).
 
+- Mannequins können Lichtschwerter halten (gezündet als Deko).
+
 Alle Balance-Werte stehen in `combat/SaberTuning.java`.
 
 ### Sonstiges
@@ -34,6 +36,13 @@ Voraussetzung: **JDK 25**.
 ```bash
 ./gradlew runClient   # Minecraft mit dem Mod starten
 ./gradlew build       # Mod-Jar bauen -> build/libs/
+```
+
+Automatischer Spieltest (startet ein echtes Minecraft, spielt das Lichtschwert in Einzelspieler
+und auf einem dedizierten Server durch und macht Screenshots in `build/run/clientGameTest/screenshots`):
+
+```bash
+./gradlew runClientGameTest
 ```
 
 Texturen und Sounds des Lichtschwerts werden prozedural erzeugt (keine fremden Assets):

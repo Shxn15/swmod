@@ -8,9 +8,9 @@ import org.joml.Vector3f;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Avatar;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
 import com.shxn15.swmod.client.anim.SaberAnimState;
@@ -37,7 +37,7 @@ public final class ThirdPersonSaber {
 		data.active = false;
 		data.sample = null;
 
-		if (!(entity instanceof Player)) {
+		if (!(entity instanceof Avatar)) {
 			return;
 		}
 

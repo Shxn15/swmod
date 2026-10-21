@@ -2,12 +2,12 @@ package com.shxn15.swmod.client.render;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.item.ItemStackRenderState;
-import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.util.Mth;
 
@@ -15,20 +15,19 @@ import com.shxn15.swmod.combat.SaberGeometry;
 
 /**
  * Zeichnet Griff, leuchtende Klinge und Bewegungsschweif. Alle Koordinaten sind im lokalen Raum
- * des übergebenen PoseStacks. Die Klinge besteht aus mehreren ineinanderliegenden, additiv
- * überblendeten Prismen: ein fast weißer Kern und farbige Leuchthüllen, die nach außen ausfaden.
+ * des übergebenen PoseStacks.
+ *
+ * <p>Die Klinge besteht aus mehreren Leuchtbändern, die immer zur Kamera zeigen. Jedes Band ist
+ * in der Mitte hell und läuft zum Rand weich auf null aus; additiv übereinandergelegt ergibt das
+ * einen fast weißen Kern mit farbigem, weichem Glühen, wie in den Filmen.
  */
 public final class SaberRenderer {
-	private static final int SIDES = 8;
-
-	/** Radius, Weißanteil, Deckkraft je Leuchtschicht (innen nach außen). */
+	/** Halbe Breite, Weißanteil, Deckkraft Mitte, Deckkraft Rand je Leuchtband (innen nach außen). */
 	private static final float[][] LAYERS = {
-			{0.011f, 0.92f, 1.00f},
-			{0.020f, 0.55f, 0.80f},
-			{0.034f, 0.15f, 0.42f},
-			{0.058f, 0.00f, 0.20f},
-			{0.095f, 0.00f, 0.085f},
-			{0.150f, 0.00f, 0.035f},
+			{0.010f, 1.00f, 1.00f, 0.80f},
+			{0.024f, 0.55f, 0.85f, 0.00f},
+			{0.060f, 0.12f, 0.55f, 0.00f},
+			{0.150f, 0.00f, 0.20f, 0.00f},
 	};
 
 	private SaberRenderer() {
@@ -37,7 +36,7 @@ public final class SaberRenderer {
 	/**
 	 * Klinge vom Emitter {@code base} bis zur Spitze {@code tip}.
 	 *
-	 * @param intensity 0..1, z.B. beim Zünden oder für Bewegungsunschärfe
+	 * @param intensity 0..1, z.B. für Bewegungsunschärfe
 	 * @param time      Animationszeit für das Flackern
 	 */
 	public static void submitBlade(PoseStack poseStack, SubmitNodeCollector collector, Vector3f base, Vector3f tip,
@@ -53,28 +52,37 @@ public final class SaberRenderer {
 		float g = ((rgb >> 8) & 0xFF) / 255f;
 		float b = (rgb & 0xFF) / 255f;
 
-		// Leichtes, unregelmäßiges Flackern wie bei einer Plasmaklinge.
-		float flicker = 0.93f + 0.04f * Mth.sin(time * 2.7f) + 0.03f * Mth.sin(time * 7.3f + 1.3f);
-		Vector3f u = new Vector3f();
-		Vector3f v = new Vector3f();
-		perpendicularBasis(axis, u, v);
+		// Leichtes, unregelmäßiges Flackern wie bei einer Plasmaklinge (nur das äußere Glühen).
+		float flicker = 0.92f + 0.05f * Mth.sin(time * 2.7f) + 0.03f * Mth.sin(time * 7.3f + 1.3f);
 
-		collector.submitCustomGeometry(poseStack, RenderTypes.lightning(), (pose, consumer) -> {
-			for (float[] layer : LAYERS) {
-				float radius = layer[0] * (layer[0] > 0.05f ? flicker : 1f);
+		collector.submitCustomGeometry(poseStack, SaberRenderTypes.GLOW, (pose, consumer) -> {
+			// Die Kamera sitzt im Ursprung des Zielraums; zurückgerechnet in den lokalen Raum.
+			Vector3f camera = new Matrix4f(pose.pose()).invert().transformPosition(new Vector3f());
+			Vector3f side = sideVector(camera, base, tip, axis);
+
+			// Aus der Ferne wächst das Glühen mit, damit die Klinge sichtbar bleibt.
+			float distance = new Vector3f(base).add(tip).mul(0.5f).distance(camera);
+			float distanceScale = Mth.clamp(distance / 2.2f, 1f, 3.5f);
+
+			for (int i = 0; i < LAYERS.length; i++) {
+				float[] layer = LAYERS[i];
+				boolean outer = i >= 2;
+				float grow = i == 0 ? 1f : (outer ? distanceScale : (float) Math.sqrt(distanceScale));
+				float halfWidth = layer[0] * grow * (outer ? (0.96f + 0.04f * flicker) : 1f);
 				float white = layer[1];
-				float alpha = layer[2] * intensity * (layer[0] > 0.03f ? flicker : 1f);
+				float alphaCenter = layer[2] * intensity * (outer ? flicker : 1f);
+				float alphaEdge = layer[3] * intensity;
 				float lr = Mth.lerp(white, r, 1f);
 				float lg = Mth.lerp(white, g, 1f);
 				float lb = Mth.lerp(white, b, 1f);
-				emitCapsule(pose, consumer, base, axis, length, radius, u, v, lr, lg, lb, alpha);
+				emitRibbon(pose, consumer, base, tip, axis, side, halfWidth, lr, lg, lb, alphaCenter, alphaEdge, !outer);
 			}
 		});
 	}
 
 	/**
 	 * Schweif hinter einer schnell bewegten Klinge: ein Band zwischen den vergangenen Positionen
-	 * von Emitter und Spitze, das nach hinten ausblendet.
+	 * von Emitter und Spitze. Zur Spitze hin heller, nach hinten (älter) ausblendend.
 	 */
 	public static void submitTrail(PoseStack poseStack, SubmitNodeCollector collector, Vector3f[] bases, Vector3f[] tips,
 								   float[] alphas, int rgb) {
@@ -85,28 +93,29 @@ public final class SaberRenderer {
 		float r = ((rgb >> 16) & 0xFF) / 255f;
 		float g = ((rgb >> 8) & 0xFF) / 255f;
 		float b = (rgb & 0xFF) / 255f;
+		float wr = Mth.lerp(0.5f, r, 1f);
+		float wg = Mth.lerp(0.5f, g, 1f);
+		float wb = Mth.lerp(0.5f, b, 1f);
 
-		collector.submitCustomGeometry(poseStack, RenderTypes.lightning(), (pose, consumer) -> {
+		collector.submitCustomGeometry(poseStack, SaberRenderTypes.GLOW, (pose, consumer) -> {
 			for (int i = 0; i < bases.length - 1; i++) {
 				float a0 = alphas[i];
 				float a1 = alphas[i + 1];
 				if (a0 <= 0.003f && a1 <= 0.003f) continue;
 
-				// Innen heller und weißer, außen farbig.
-				Vector3f b0 = bases[i];
-				Vector3f b1 = bases[i + 1];
-				Vector3f t0 = tips[i];
-				Vector3f t1 = tips[i + 1];
-				Vector3f m0 = new Vector3f(b0).lerp(t0, 0.15f);
-				Vector3f m1 = new Vector3f(b1).lerp(t1, 0.15f);
+				// Farbiges Band über die ganze Klinge, innen am Emitter unsichtbar.
+				vertex(pose, consumer, bases[i], r, g, b, 0f);
+				vertex(pose, consumer, tips[i], r, g, b, a0);
+				vertex(pose, consumer, tips[i + 1], r, g, b, a1);
+				vertex(pose, consumer, bases[i + 1], r, g, b, 0f);
 
-				doubleSidedQuad(pose, consumer, m0, t0, t1, m1, r, g, b, a0, a1);
-				float wr = Mth.lerp(0.6f, r, 1f);
-				float wg = Mth.lerp(0.6f, g, 1f);
-				float wb = Mth.lerp(0.6f, b, 1f);
-				Vector3f c0 = new Vector3f(b0).lerp(t0, 0.55f);
-				Vector3f c1 = new Vector3f(b1).lerp(t1, 0.55f);
-				doubleSidedQuad(pose, consumer, c0, t0, t1, c1, wr, wg, wb, a0 * 0.5f, a1 * 0.5f);
+				// Hellerer Streifen im äußeren Drittel, wo sich die Klinge am schnellsten bewegt.
+				Vector3f m0 = new Vector3f(bases[i]).lerp(tips[i], 0.6f);
+				Vector3f m1 = new Vector3f(bases[i + 1]).lerp(tips[i + 1], 0.6f);
+				vertex(pose, consumer, m0, wr, wg, wb, 0f);
+				vertex(pose, consumer, tips[i], wr, wg, wb, a0 * 0.6f);
+				vertex(pose, consumer, tips[i + 1], wr, wg, wb, a1 * 0.6f);
+				vertex(pose, consumer, m1, wr, wg, wb, 0f);
 			}
 		});
 	}
@@ -134,84 +143,53 @@ public final class SaberRenderer {
 
 	// ------------------------------------------------------------------------------------------
 
-	/** Prisma mit spitz zulaufendem Ende, das die Klinge als leuchtende "Kapsel" darstellt. */
-	private static void emitCapsule(PoseStack.Pose pose, VertexConsumer consumer, Vector3f base, Vector3f axis, float length,
-									float radius, Vector3f u, Vector3f v, float r, float g, float b, float a) {
-		// Hinten etwas über den Emitter hinaus, vorne zur Spitze verjüngt.
-		float start = -radius * 0.4f;
-		float bodyEnd = Math.max(start, length - radius * 1.5f);
-		float tipEnd = length + radius * 0.6f;
+	/** Richtung quer zur Klinge, senkrecht zur Blickrichtung der Kamera. */
+	private static Vector3f sideVector(Vector3f camera, Vector3f base, Vector3f tip, Vector3f axis) {
+		Vector3f middle = new Vector3f(base).add(tip).mul(0.5f);
+		Vector3f view = middle.sub(camera);
+		Vector3f side = new Vector3f(axis).cross(view);
+		if (side.lengthSquared() < 1.0E-8f) {
+			// Kamera schaut genau entlang der Klinge: beliebige Senkrechte nehmen.
+			side = new Vector3f(axis).cross(Math.abs(axis.y) < 0.9f ? new Vector3f(0, 1, 0) : new Vector3f(1, 0, 0));
+		}
+		return side.normalize();
+	}
 
-		Vector3f center0 = new Vector3f(axis).mul(start).add(base);
-		Vector3f center1 = new Vector3f(axis).mul(bodyEnd).add(base);
-		Vector3f tipPoint = new Vector3f(axis).mul(tipEnd).add(base);
+	/** Ein Leuchtband mit Verlauf (Mitte -> Rand) und abgerundeter Spitze. */
+	private static void emitRibbon(PoseStack.Pose pose, VertexConsumer consumer, Vector3f base, Vector3f tip, Vector3f axis,
+								   Vector3f side, float halfWidth, float r, float g, float b, float alphaCenter, float alphaEdge,
+								   boolean baseCap) {
+		Vector3f offset = new Vector3f(side).mul(halfWidth);
+		Vector3f l0 = new Vector3f(base).sub(offset);
+		Vector3f r0 = new Vector3f(base).add(offset);
+		Vector3f l1 = new Vector3f(tip).sub(offset);
+		Vector3f r1 = new Vector3f(tip).add(offset);
 
-		Vector3f[] ring0 = ring(center0, u, v, radius);
-		Vector3f[] ring1 = ring(center1, u, v, radius);
+		// Körper: zwei Hälften, jeweils von der hellen Mitte zum dunklen Rand.
+		quad(pose, consumer, l0, base, tip, l1, r, g, b, alphaEdge, alphaCenter, alphaCenter, alphaEdge);
+		quad(pose, consumer, base, r0, r1, tip, r, g, b, alphaCenter, alphaEdge, alphaEdge, alphaCenter);
 
-		for (int i = 0; i < SIDES; i++) {
-			int j = (i + 1) % SIDES;
-			outwardQuad(pose, consumer, ring0[i], ring0[j], ring1[j], ring1[i], center0, center1, r, g, b, a);
-			// Spitze: Dreieck als entarteter Quad
-			outwardQuad(pose, consumer, ring1[i], ring1[j], tipPoint, tipPoint, center1, tipPoint, r, g, b, a);
+		// Abgerundete Spitze.
+		Vector3f cap = new Vector3f(axis).mul(halfWidth * 1.2f).add(tip);
+		quad(pose, consumer, l1, tip, cap, cap, r, g, b, alphaEdge, alphaCenter, 0f, 0f);
+		quad(pose, consumer, tip, r1, cap, cap, r, g, b, alphaCenter, alphaEdge, 0f, 0f);
+
+		if (baseCap) {
+			Vector3f back = new Vector3f(axis).mul(-halfWidth * 0.6f).add(base);
+			quad(pose, consumer, base, l0, back, back, r, g, b, alphaCenter, alphaEdge, 0f, 0f);
+			quad(pose, consumer, r0, base, back, back, r, g, b, alphaEdge, alphaCenter, 0f, 0f);
 		}
 	}
 
-	private static Vector3f[] ring(Vector3f center, Vector3f u, Vector3f v, float radius) {
-		Vector3f[] ring = new Vector3f[SIDES];
-		for (int i = 0; i < SIDES; i++) {
-			float angle = Mth.TWO_PI * i / SIDES;
-			float cos = Mth.cos(angle) * radius;
-			float sin = Mth.sin(angle) * radius;
-			ring[i] = new Vector3f(center).add(u.x * cos + v.x * sin, u.y * cos + v.y * sin, u.z * cos + v.z * sin);
-		}
-		return ring;
-	}
-
-	/** Gibt einen Quad so aus, dass seine Vorderseite von der Achse weg zeigt (wichtig für Backface-Culling). */
-	private static void outwardQuad(PoseStack.Pose pose, VertexConsumer consumer, Vector3f p0, Vector3f p1, Vector3f p2, Vector3f p3,
-									Vector3f axisA, Vector3f axisB, float r, float g, float b, float a) {
-		Vector3f e1 = new Vector3f(p1).sub(p0);
-		Vector3f e2 = new Vector3f(p3).sub(p0);
-		Vector3f normal = e1.cross(e2);
-
-		Vector3f mid = new Vector3f(p0).add(p1).add(p2).add(p3).mul(0.25f);
-		Vector3f axisMid = new Vector3f(axisA).add(axisB).mul(0.5f);
-		Vector3f outward = mid.sub(axisMid);
-
-		if (normal.dot(outward) >= 0) {
-			vertex(pose, consumer, p0, r, g, b, a);
-			vertex(pose, consumer, p1, r, g, b, a);
-			vertex(pose, consumer, p2, r, g, b, a);
-			vertex(pose, consumer, p3, r, g, b, a);
-		} else {
-			vertex(pose, consumer, p3, r, g, b, a);
-			vertex(pose, consumer, p2, r, g, b, a);
-			vertex(pose, consumer, p1, r, g, b, a);
-			vertex(pose, consumer, p0, r, g, b, a);
-		}
-	}
-
-	private static void doubleSidedQuad(PoseStack.Pose pose, VertexConsumer consumer, Vector3f p0, Vector3f p1, Vector3f p2, Vector3f p3,
-										float r, float g, float b, float a0, float a1) {
+	private static void quad(PoseStack.Pose pose, VertexConsumer consumer, Vector3f p0, Vector3f p1, Vector3f p2, Vector3f p3,
+							 float r, float g, float b, float a0, float a1, float a2, float a3) {
 		vertex(pose, consumer, p0, r, g, b, a0);
-		vertex(pose, consumer, p1, r, g, b, a0);
-		vertex(pose, consumer, p2, r, g, b, a1);
-		vertex(pose, consumer, p3, r, g, b, a1);
-
-		vertex(pose, consumer, p3, r, g, b, a1);
-		vertex(pose, consumer, p2, r, g, b, a1);
-		vertex(pose, consumer, p1, r, g, b, a0);
-		vertex(pose, consumer, p0, r, g, b, a0);
+		vertex(pose, consumer, p1, r, g, b, a1);
+		vertex(pose, consumer, p2, r, g, b, a2);
+		vertex(pose, consumer, p3, r, g, b, a3);
 	}
 
 	private static void vertex(PoseStack.Pose pose, VertexConsumer consumer, Vector3f p, float r, float g, float b, float a) {
 		consumer.addVertex(pose, p.x, p.y, p.z).setColor(r, g, b, a);
-	}
-
-	private static void perpendicularBasis(Vector3f axis, Vector3f u, Vector3f v) {
-		Vector3f helper = Math.abs(axis.y) < 0.9f ? new Vector3f(0, 1, 0) : new Vector3f(1, 0, 0);
-		axis.cross(helper, u).normalize();
-		axis.cross(u, v).normalize();
 	}
 }

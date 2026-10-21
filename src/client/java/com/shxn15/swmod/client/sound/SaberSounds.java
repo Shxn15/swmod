@@ -6,8 +6,8 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.world.entity.Avatar;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.player.Player;
 
 import com.shxn15.swmod.client.anim.SaberAnimState;
 import com.shxn15.swmod.client.anim.SaberAnimations;
@@ -32,18 +32,16 @@ public final class SaberSounds {
 
 		HUMS.int2ObjectEntrySet().removeIf(entry -> !minecraft.getSoundManager().isActive(entry.getValue()));
 
-		for (Player player : level.players()) {
-			if (player.distanceToSqr(listener) > HEARING_RANGE_SQR || HUMS.containsKey(player.getId())) continue;
-			SaberAnimState anim = SaberAnimations.peek(player);
-			if (anim != null && Lightsabers.isIgnited(player.getMainHandItem()) && !anim.isThrown()) {
-				start(minecraft, player);
-			}
-		}
-
 		for (Entity entity : level.entitiesForRendering()) {
-			if (entity instanceof ThrownLightsaberEntity && !HUMS.containsKey(entity.getId())
-					&& entity.distanceToSqr(listener) < HEARING_RANGE_SQR) {
+			if (HUMS.containsKey(entity.getId()) || entity.distanceToSqr(listener) > HEARING_RANGE_SQR) continue;
+
+			if (entity instanceof ThrownLightsaberEntity) {
 				start(minecraft, entity);
+			} else if (entity instanceof Avatar avatar) {
+				SaberAnimState anim = SaberAnimations.peek(avatar);
+				if (anim != null && Lightsabers.isIgnited(avatar.getMainHandItem()) && !anim.isThrown()) {
+					start(minecraft, avatar);
+				}
 			}
 		}
 	}

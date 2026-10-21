@@ -35,7 +35,11 @@ public final class SaberHud {
 		int cy = minecraft.getWindow().getGuiScaledHeight() / 2;
 
 		if (SaberInput.isSaberReady(minecraft)) {
-			renderBlockBar(graphics, cx, cy);
+			// Der Balken erscheint nur, wenn er etwas aussagt: beim Blocken, nach Treffern oder bei gebrochener Deckung.
+			boolean blocking = minecraft.player.isUsingItem() && Lightsabers.isLightsaber(minecraft.player.getUseItem());
+			if (blocking || SaberInput.guardTicks() > 0 || SaberInput.blockPoints() < SaberTuning.MAX_BLOCK_POINTS - 0.5f) {
+				renderBlockBar(graphics, cx, cy);
+			}
 			renderGesture(graphics, cx, cy);
 		}
 	}

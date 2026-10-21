@@ -161,11 +161,21 @@ public final class SaberInput {
 		boolean ready = isSaberReady(minecraft) && minecraft.gui.screen() == null;
 		boolean down = ready && minecraft.options.keyAttack.isDown();
 
+		// Auch Klicks zählen, die zwischen zwei Ticks gedrückt UND losgelassen wurden.
+		int clicks = 0;
+		if (ready) {
+			while (minecraft.options.keyAttack.consumeClick()) {
+				clicks++;
+			}
+		}
+
 		// Bewegung zerfällt mit der Zeit: nur zügige Bewegungen zählen als Schlag.
 		gestureX *= 0.55;
 		gestureY *= 0.55;
 
-		if (down && !attackHeld) {
+		if (!down && !attackHeld && clicks > 0) {
+			requestSwing(minecraft, player, directionFromKeys(minecraft));
+		} else if (down && !attackHeld) {
 			attackHeld = true;
 			gestureUsed = false;
 			heldTicks = 0;

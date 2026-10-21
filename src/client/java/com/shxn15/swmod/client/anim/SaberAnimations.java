@@ -6,9 +6,9 @@ import org.jspecify.annotations.Nullable;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.world.entity.Avatar;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
 import com.shxn15.swmod.combat.SaberAnimation;
@@ -49,11 +49,13 @@ public final class SaberAnimations {
 			return;
 		}
 
-		for (Player player : level.players()) {
-			ItemStack stack = player.getMainHandItem();
-			SaberAnimState state = Lightsabers.isLightsaber(stack) ? get(player) : STATES.get(player.getId());
+		// Spieler und Mannequins (beides Avatare) können Lichtschwerter tragen.
+		for (Entity entity : level.entitiesForRendering()) {
+			if (!(entity instanceof Avatar avatar)) continue;
+			ItemStack stack = avatar.getMainHandItem();
+			SaberAnimState state = Lightsabers.isLightsaber(stack) ? get(avatar) : STATES.get(avatar.getId());
 			if (state != null) {
-				state.tick(player, stack, clientTicks);
+				state.tick(avatar, stack, clientTicks);
 			}
 		}
 
